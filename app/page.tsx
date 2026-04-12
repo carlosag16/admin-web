@@ -1,108 +1,256 @@
-import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Users, Car, ClipboardList, CreditCard, Clock, Activity } from 'lucide-react';
+import { Car, Shield, Zap, MapPin, Star, Clock, ChevronRight, Phone, Mail } from 'lucide-react';
 
-async function getDashboardStats() {
-  const [
-    { count: totalUsers },
-    { count: totalDrivers },
-    { count: pendingDrivers },
-    { count: totalSolicitacoes },
-    { count: pendingSolicitacoes },
-    { count: activeSolicitacoes },
-    { count: totalPagamentos },
-    { count: paidPagamentos },
-  ] = await Promise.all([
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('user_type', 'user'),
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('user_type', 'driver'),
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('user_type', 'driver').eq('status_motorista', 'pendente'),
-    supabase.from('solicitacoes').select('*', { count: 'exact', head: true }),
-    supabase.from('solicitacoes').select('*', { count: 'exact', head: true }).eq('status', 'pendente'),
-    supabase.from('solicitacoes').select('*', { count: 'exact', head: true }).in('status', ['confirmada', 'em_andamento']),
-    supabase.from('pagamentos').select('*', { count: 'exact', head: true }),
-    supabase.from('pagamentos').select('*', { count: 'exact', head: true }).eq('status', 'PAID'),
-  ]);
-
-  return {
-    totalUsers: totalUsers ?? 0,
-    totalDrivers: totalDrivers ?? 0,
-    pendingDrivers: pendingDrivers ?? 0,
-    totalSolicitacoes: totalSolicitacoes ?? 0,
-    pendingSolicitacoes: pendingSolicitacoes ?? 0,
-    activeSolicitacoes: activeSolicitacoes ?? 0,
-    totalPagamentos: totalPagamentos ?? 0,
-    paidPagamentos: paidPagamentos ?? 0,
-  };
-}
-
-export default async function Dashboard() {
-  const stats = await getDashboardStats();
-
-  const cards = [
-    { title: 'Usuários', value: stats.totalUsers, sub: 'clientes cadastrados', href: '/usuarios', color: 'bg-blue-500', Icon: Users },
-    { title: 'Motoristas', value: stats.totalDrivers, sub: `${stats.pendingDrivers} aguardando aprovação`, href: '/motoristas', color: stats.pendingDrivers > 0 ? 'bg-orange-500' : 'bg-green-500', Icon: Car },
-    { title: 'Solicitações', value: stats.totalSolicitacoes, sub: `${stats.pendingSolicitacoes} pendentes • ${stats.activeSolicitacoes} ativas`, href: '/solicitacoes', color: 'bg-purple-500', Icon: ClipboardList },
-    { title: 'Pagamentos', value: stats.totalPagamentos, sub: `${stats.paidPagamentos} pagos`, href: '/pagamentos', color: 'bg-emerald-500', Icon: CreditCard },
-  ];
-
+export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-zinc-50">
-      <header className="bg-white border-b border-zinc-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-zinc-900">Chofair Admin</h1>
-            <p className="text-sm text-zinc-500">Painel de controle</p>
-          </div>
-          <nav className="flex gap-4 text-sm font-medium text-zinc-600">
-            <Link href="/" className="text-zinc-900 font-semibold">Dashboard</Link>
-            <Link href="/usuarios" className="hover:text-zinc-900">Usuários</Link>
-            <Link href="/motoristas" className="hover:text-zinc-900">Motoristas</Link>
-            <Link href="/solicitacoes" className="hover:text-zinc-900">Solicitações</Link>
-            <Link href="/pagamentos" className="hover:text-zinc-900">Pagamentos</Link>
+    <div className="min-h-screen bg-slate-950 text-white">
+
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <span className="text-2xl font-bold text-[#0058A3]">Chofair</span>
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+            <a href="#como-funciona" className="hover:text-white transition-colors">Como funciona</a>
+            <a href="#vantagens" className="hover:text-white transition-colors">Vantagens</a>
+            <a href="#motoristas" className="hover:text-white transition-colors">Motoristas</a>
+            <a href="#contato" className="hover:text-white transition-colors">Contato</a>
           </nav>
+          <Link
+            href="/login"
+            className="bg-[#0058A3] hover:bg-[#0069C0] text-white font-bold text-sm px-5 py-2.5 rounded-full transition-colors"
+          >
+            Área Admin
+          </Link>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-10">
-        <h2 className="text-xl font-semibold text-zinc-800 mb-6">Visão Geral</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          {cards.map((card) => (
-            <Link key={card.href} href={card.href} className="bg-white rounded-xl border border-zinc-200 p-6 hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className={`w-10 h-10 ${card.color} rounded-lg flex items-center justify-center`}>
-                  <card.Icon size={20} className="text-white" />
-                </div>
-              </div>
-              <p className="text-3xl font-bold text-zinc-900 mb-1">{card.value}</p>
-              <p className="text-sm font-semibold text-zinc-700 mb-1">{card.title}</p>
-              <p className="text-xs text-zinc-500">{card.sub}</p>
-            </Link>
-          ))}
-        </div>
-
-        <div className="bg-white rounded-xl border border-zinc-200 p-6">
-          <h3 className="text-base font-semibold text-zinc-800 mb-4">Ações Rápidas</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <Link href="/motoristas?filter=pendente" className="flex flex-col items-center gap-2 p-4 rounded-lg bg-orange-50 border border-orange-100 hover:bg-orange-100 transition-colors text-center">
-              <Clock size={22} className="text-orange-500" />
-              <span className="text-xs font-semibold text-orange-800">Aprovar Motoristas ({stats.pendingDrivers})</span>
-            </Link>
-            <Link href="/solicitacoes?filter=pendente" className="flex flex-col items-center gap-2 p-4 rounded-lg bg-purple-50 border border-purple-100 hover:bg-purple-100 transition-colors text-center">
-              <ClipboardList size={22} className="text-purple-500" />
-              <span className="text-xs font-semibold text-purple-800">Solicitações Pendentes ({stats.pendingSolicitacoes})</span>
-            </Link>
-            <Link href="/solicitacoes?filter=em_andamento" className="flex flex-col items-center gap-2 p-4 rounded-lg bg-blue-50 border border-blue-100 hover:bg-blue-100 transition-colors text-center">
-              <Activity size={22} className="text-blue-500" />
-              <span className="text-xs font-semibold text-blue-800">Corridas Ativas ({stats.activeSolicitacoes})</span>
-            </Link>
-            <Link href="/pagamentos?filter=PENDING" className="flex flex-col items-center gap-2 p-4 rounded-lg bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 transition-colors text-center">
-              <CreditCard size={22} className="text-emerald-500" />
-              <span className="text-xs font-semibold text-emerald-800">Pagamentos Pendentes</span>
-            </Link>
+      {/* Hero */}
+      <section className="pt-32 pb-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 bg-[#0058A3]/10 border border-[#0058A3]/20 rounded-full px-4 py-1.5 mb-8">
+              <span className="w-2 h-2 rounded-full bg-[#0058A3] animate-pulse" />
+              <span className="text-[#0058A3] text-sm font-medium">Disponível 24 horas por dia</span>
+            </div>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
+              Sua corrida,{' '}
+              <span className="text-[#0058A3]">do seu jeito</span>
+            </h1>
+            <p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-xl">
+              A Chofair conecta você a motoristas verificados de forma rápida, segura e confortável. Solicite uma corrida em segundos.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a
+                href="#como-funciona"
+                className="inline-flex items-center justify-center gap-2 bg-[#0058A3] hover:bg-[#0069C0] text-white font-bold px-8 py-4 rounded-full transition-colors text-base"
+              >
+                Saiba mais <ChevronRight size={18} />
+              </a>
+              <a
+                href="#motoristas"
+                className="inline-flex items-center justify-center gap-2 border border-slate-700 hover:border-slate-500 text-white font-semibold px-8 py-4 rounded-full transition-colors text-base"
+              >
+                Seja motorista
+              </a>
+            </div>
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* Stats bar */}
+      <section className="border-y border-slate-800 bg-slate-900/50 py-10 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {[
+            { value: '+10.000', label: 'Usuários ativos' },
+            { value: '+500', label: 'Motoristas parceiros' },
+            { value: '+50.000', label: 'Corridas realizadas' },
+            { value: '4.9★', label: 'Avaliação média' },
+          ].map((stat) => (
+            <div key={stat.label}>
+              <p className="text-3xl font-extrabold text-[#0058A3] mb-1">{stat.value}</p>
+              <p className="text-sm text-slate-400">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Como funciona */}
+      <section id="como-funciona" className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">Como funciona</h2>
+            <p className="text-slate-400 max-w-xl mx-auto">Em apenas três passos simples você já está em movimento.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                step: '01',
+                icon: MapPin,
+                title: 'Informe seu destino',
+                desc: 'Abra o app, insira seu ponto de partida e destino. Nossa plataforma calcula a rota mais eficiente.',
+              },
+              {
+                step: '02',
+                icon: Car,
+                title: 'Escolha seu motorista',
+                desc: 'Veja motoristas disponíveis próximos a você, com avaliações e tempo estimado de chegada.',
+              },
+              {
+                step: '03',
+                icon: Star,
+                title: 'Viaje e avalie',
+                desc: 'Acompanhe a corrida em tempo real e ao final avalie sua experiência para ajudar a comunidade.',
+              },
+            ].map((item) => (
+              <div key={item.step} className="relative bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-[#0058A3]/40 transition-colors">
+                <span className="absolute top-6 right-6 text-5xl font-black text-slate-800">{item.step}</span>
+                <div className="w-12 h-12 bg-[#0058A3]/10 rounded-xl flex items-center justify-center mb-6">
+                  <item.icon size={24} className="text-[#0058A3]" />
+                </div>
+                <h3 className="text-lg font-bold mb-3">{item.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Vantagens */}
+      <section id="vantagens" className="py-24 px-6 bg-slate-900/40">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">Por que escolher a Chofair?</h2>
+            <p className="text-slate-400 max-w-xl mx-auto">Pensamos em cada detalhe para que sua experiência seja sempre a melhor.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Shield,
+                title: 'Segurança em primeiro lugar',
+                desc: 'Todos os motoristas passam por verificação de antecedentes e têm documentação validada pela nossa equipe.',
+              },
+              {
+                icon: Zap,
+                title: 'Rapidez e pontualidade',
+                desc: 'Motoristas próximos a você, sempre prontos para buscar você no menor tempo possível.',
+              },
+              {
+                icon: Clock,
+                title: 'Disponível 24/7',
+                desc: 'Madrugada, feriado ou horário de pico — a Chofair está sempre disponível quando você precisar.',
+              },
+              {
+                icon: Star,
+                title: 'Motoristas avaliados',
+                desc: 'Sistema de avaliações bidirecional que garante qualidade para passageiros e motoristas.',
+              },
+              {
+                icon: MapPin,
+                title: 'Rastreamento em tempo real',
+                desc: 'Acompanhe sua corrida ao vivo e compartilhe sua localização com quem quiser.',
+              },
+              {
+                icon: Car,
+                title: 'Diversas categorias',
+                desc: 'Do econômico ao executivo, escolha o tipo de veículo que melhor atende à sua necessidade.',
+              },
+            ].map((item) => (
+              <div key={item.title} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-[#0058A3]/30 transition-colors">
+                <div className="w-10 h-10 bg-[#0058A3]/10 rounded-lg flex items-center justify-center mb-4">
+                  <item.icon size={20} className="text-[#0058A3]" />
+                </div>
+                <h3 className="font-bold mb-2">{item.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Motoristas */}
+      <section id="motoristas" className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-gradient-to-br from-[#0058A3]/10 to-[#0058A3]/5 border border-[#0058A3]/20 rounded-3xl p-10 md:p-16 flex flex-col md:flex-row items-center gap-10">
+            <div className="flex-1">
+              <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
+                Seja um motorista parceiro
+              </h2>
+              <p className="text-slate-400 leading-relaxed mb-8">
+                Tenha flexibilidade de horário, ganhos competitivos e suporte dedicado. Cadastre-se hoje e comece a gerar renda com o seu veículo.
+              </p>
+              <ul className="space-y-3 mb-8">
+                {[
+                  'Defina seus próprios horários',
+                  'Pagamentos semanais garantidos',
+                  'Suporte exclusivo para motoristas',
+                  'Programa de bonificação por desempenho',
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-sm text-slate-300">
+                    <span className="w-5 h-5 rounded-full bg-[#0058A3]/20 flex items-center justify-center shrink-0">
+                      <ChevronRight size={12} className="text-[#0058A3]" />
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="#contato"
+                className="inline-flex items-center gap-2 bg-[#0058A3] hover:bg-[#0069C0] text-white font-bold px-8 py-3.5 rounded-full transition-colors"
+              >
+                Quero ser motorista <ChevronRight size={18} />
+              </a>
+            </div>
+            <div className="w-48 h-48 md:w-64 md:h-64 bg-[#0058A3]/10 rounded-full flex items-center justify-center shrink-0">
+              <Car size={80} className="text-[#0058A3]" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contato */}
+      <section id="contato" className="py-24 px-6 bg-slate-900/40">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">Entre em contato</h2>
+          <p className="text-slate-400 mb-12 max-w-lg mx-auto">
+            Dúvidas, sugestões ou quer fazer parte da nossa equipe? Fale com a gente.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <a
+              href="mailto:contato@chofair.com"
+              className="inline-flex items-center gap-3 bg-slate-900 border border-slate-700 hover:border-[#0058A3]/50 rounded-2xl px-8 py-5 transition-colors"
+            >
+              <Mail size={20} className="text-[#0058A3]" />
+              <div className="text-left">
+                <p className="text-xs text-slate-500 mb-0.5">Email</p>
+                <p className="font-semibold text-sm">contato@chofair.com</p>
+              </div>
+            </a>
+            <a
+              href="tel:+5500000000000"
+              className="inline-flex items-center gap-3 bg-slate-900 border border-slate-700 hover:border-[#0058A3]/50 rounded-2xl px-8 py-5 transition-colors"
+            >
+              <Phone size={20} className="text-[#0058A3]" />
+              <div className="text-left">
+                <p className="text-xs text-slate-500 mb-0.5">Telefone</p>
+                <p className="font-semibold text-sm">(00) 0000-0000</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-800 py-10 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-xl font-bold text-[#0058A3]">Chofair</span>
+          <p className="text-sm text-slate-500">© {new Date().getFullYear()} Chofair. Todos os direitos reservados.</p>
+          <div className="flex gap-6 text-sm text-slate-500">
+            <a href="#" className="hover:text-white transition-colors">Privacidade</a>
+            <a href="#" className="hover:text-white transition-colors">Termos</a>
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 }

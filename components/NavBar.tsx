@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Users, Car, ClipboardList, CreditCard } from 'lucide-react';
 
 const links = [
-  { href: '/', label: 'Dashboard', Icon: LayoutDashboard },
+  { href: '/admin', label: 'Dashboard', Icon: LayoutDashboard },
   { href: '/usuarios', label: 'Usuários', Icon: Users },
   { href: '/motoristas', label: 'Motoristas', Icon: Car },
   { href: '/solicitacoes', label: 'Solicitações', Icon: ClipboardList },
@@ -19,12 +19,12 @@ export default function NavBar() {
     <header className="bg-white border-b border-zinc-200 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div>
-          <Link href="/" className="text-2xl font-bold text-zinc-900">Chofair Admin</Link>
+          <Link href="/admin" className="text-2xl font-bold text-zinc-900">Chofair Admin</Link>
           <p className="text-sm text-zinc-500">Painel de controle</p>
         </div>
         <nav className="flex gap-1 text-sm font-medium">
           {links.map(({ href, label, Icon }) => {
-            const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href);
+            const isActive = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
             return (
               <Link
                 key={href}
