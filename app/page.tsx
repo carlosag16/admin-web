@@ -15,12 +15,6 @@ export default function LandingPage() {
             <a href="#motoristas" className="hover:text-white transition-colors">Motoristas</a>
             <a href="#contato" className="hover:text-white transition-colors">Contato</a>
           </nav>
-          <Link
-            href="/login"
-            className="bg-[#0058A3] hover:bg-[#0069C0] text-white font-bold text-sm px-5 py-2.5 rounded-full transition-colors"
-          >
-            Área Admin
-          </Link>
         </div>
       </header>
 
