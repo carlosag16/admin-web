@@ -26,13 +26,14 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   const pathname = request.nextUrl.pathname;
 
-  // Se não está logado e tenta acessar qualquer rota que não seja /login
-  if (!user && pathname !== '/login') {
+  // Rotas públicas — acessíveis sem login
+  const publicRoutes = ['/', '/login'];
+  if (!user && !publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // Se está logado, verifica se é admin
-  if (user && pathname !== '/login') {
+  // Se está logado em rota protegida, verifica se é admin
+  if (user && !publicRoutes.includes(pathname)) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('user_type')
