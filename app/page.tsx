@@ -10,32 +10,36 @@ import {
 	Phone,
 	Mail,
 } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function LandingPage() {
 	return (
-		<div className="min-h-screen bg-slate-950 text-white">
+		<div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white">
 			{/* Header */}
-			<header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
+			<header className="fixed top-0 left-0 right-0 z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
 				<div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 					<span className="text-2xl font-bold text-[#0058A3]">Chofair</span>
-					<nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
-						<a
-							href="#como-funciona"
-							className="hover:text-white transition-colors">
-							Como funciona
-						</a>
-						<a href="#vantagens" className="hover:text-white transition-colors">
-							Vantagens
-						</a>
-						<a
-							href="#motoristas"
-							className="hover:text-white transition-colors">
-							Motoristas
-						</a>
-						<a href="#contato" className="hover:text-white transition-colors">
-							Contato
-						</a>
-					</nav>
+					<div className="flex items-center gap-4">
+						<nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500 dark:text-slate-400">
+							<a
+								href="#como-funciona"
+								className="hover:text-slate-900 dark:hover:text-white transition-colors">
+								Como funciona
+							</a>
+							<a href="#vantagens" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+								Vantagens
+							</a>
+							<a
+								href="#motoristas"
+								className="hover:text-slate-900 dark:hover:text-white transition-colors">
+								Motoristas
+							</a>
+							<a href="#contato" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+								Contato
+							</a>
+						</nav>
+						<ThemeToggle />
+					</div>
 				</div>
 			</header>
 
@@ -52,7 +56,7 @@ export default function LandingPage() {
 						<h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
 							Sua corrida, <span className="text-[#0058A3]">do seu jeito.</span>
 						</h1>
-						<p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-xl">
+						<p className="text-xl text-slate-500 dark:text-slate-400 mb-10 leading-relaxed max-w-xl">
 							A Chofair conecta você a motoristas verificados de forma rápida,
 							segura e confortável. Solicite uma corrida em segundos.
 						</p>
@@ -64,7 +68,7 @@ export default function LandingPage() {
 							</a>
 							<a
 								href="#motoristas"
-								className="inline-flex items-center justify-center gap-2 border border-slate-700 hover:border-slate-500 text-white font-semibold px-8 py-4 rounded-full transition-colors text-base">
+								className="inline-flex items-center justify-center gap-2 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 text-slate-900 dark:text-white font-semibold px-8 py-4 rounded-full transition-colors text-base">
 								Seja motorista
 							</a>
 						</div>
@@ -73,7 +77,7 @@ export default function LandingPage() {
 			</section>
 
 			{/* Stats bar */}
-			<section className="border-y border-slate-800 bg-slate-900/50 py-10 px-6">
+			<section className="border-y border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/50 py-10 px-6">
 				<div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
 					{[
 						{ value: '+10.000', label: 'Usuários ativos' },
@@ -85,7 +89,7 @@ export default function LandingPage() {
 							<p className="text-3xl font-extrabold text-[#0058A3] mb-1">
 								{stat.value}
 							</p>
-							<p className="text-sm text-slate-400">{stat.label}</p>
+							<p className="text-sm text-slate-500 dark:text-slate-400">{stat.label}</p>
 						</div>
 					))}
 				</div>
@@ -98,7 +102,7 @@ export default function LandingPage() {
 						<h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
 							Como funciona
 						</h2>
-						<p className="text-slate-400 max-w-xl mx-auto">
+						<p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
 							Em apenas três passos simples você já está em movimento.
 						</p>
 					</div>
@@ -125,15 +129,15 @@ export default function LandingPage() {
 						].map((item) => (
 							<div
 								key={item.step}
-								className="relative bg-slate-900 border border-slate-800 rounded-2xl p-8 hover:border-[#0058A3]/40 transition-colors">
-								<span className="absolute top-6 right-6 text-5xl font-black text-slate-800">
+								className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 hover:border-[#0058A3]/40 transition-colors">
+								<span className="absolute top-6 right-6 text-5xl font-black text-slate-200 dark:text-slate-800">
 									{item.step}
 								</span>
 								<div className="w-12 h-12 bg-[#0058A3]/10 rounded-xl flex items-center justify-center mb-6">
 									<item.icon size={24} className="text-[#0058A3]" />
 								</div>
 								<h3 className="text-lg font-bold mb-3">{item.title}</h3>
-								<p className="text-slate-400 text-sm leading-relaxed">
+								<p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
 									{item.desc}
 								</p>
 							</div>
@@ -143,13 +147,13 @@ export default function LandingPage() {
 			</section>
 
 			{/* Vantagens */}
-			<section id="vantagens" className="py-24 px-6 bg-slate-900/40">
+			<section id="vantagens" className="py-24 px-6 bg-slate-100/40 dark:bg-slate-900/40">
 				<div className="max-w-7xl mx-auto">
 					<div className="text-center mb-16">
 						<h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
 							Por que escolher a Chofair?
 						</h2>
-						<p className="text-slate-400 max-w-xl mx-auto">
+						<p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
 							Pensamos em cada detalhe para que sua experiência seja sempre a
 							melhor.
 						</p>
@@ -189,12 +193,12 @@ export default function LandingPage() {
 						].map((item) => (
 							<div
 								key={item.title}
-								className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-[#0058A3]/30 transition-colors">
+								className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 hover:border-[#0058A3]/30 transition-colors">
 								<div className="w-10 h-10 bg-[#0058A3]/10 rounded-lg flex items-center justify-center mb-4">
 									<item.icon size={20} className="text-[#0058A3]" />
 								</div>
 								<h3 className="font-bold mb-2">{item.title}</h3>
-								<p className="text-slate-400 text-sm leading-relaxed">
+								<p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
 									{item.desc}
 								</p>
 							</div>
@@ -211,7 +215,7 @@ export default function LandingPage() {
 							<h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
 								Seja um motorista parceiro
 							</h2>
-							<p className="text-slate-400 leading-relaxed mb-8">
+							<p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-8">
 								Tenha flexibilidade de horário, ganhos competitivos e suporte
 								dedicado. Cadastre-se hoje e comece a gerar renda com o seu
 								veículo.
@@ -225,7 +229,7 @@ export default function LandingPage() {
 								].map((item) => (
 									<li
 										key={item}
-										className="flex items-center gap-3 text-sm text-slate-300">
+										className="flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300">
 										<span className="w-5 h-5 rounded-full bg-[#0058A3]/20 flex items-center justify-center shrink-0">
 											<ChevronRight size={12} className="text-[#0058A3]" />
 										</span>
@@ -247,19 +251,19 @@ export default function LandingPage() {
 			</section>
 
 			{/* Contato */}
-			<section id="contato" className="py-24 px-6 bg-slate-900/40">
+			<section id="contato" className="py-24 px-6 bg-slate-100/40 dark:bg-slate-900/40">
 				<div className="max-w-7xl mx-auto text-center">
 					<h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
 						Entre em contato
 					</h2>
-					<p className="text-slate-400 mb-12 max-w-lg mx-auto">
+					<p className="text-slate-500 dark:text-slate-400 mb-12 max-w-lg mx-auto">
 						Dúvidas, sugestões ou quer fazer parte da nossa equipe? Fale com a
 						gente.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-6 justify-center">
 						<a
 							href="mailto:contato@chofair.com"
-							className="inline-flex items-center gap-3 bg-slate-900 border border-slate-700 hover:border-[#0058A3]/50 rounded-2xl px-8 py-5 transition-colors">
+							className="inline-flex items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-[#0058A3]/50 rounded-2xl px-8 py-5 transition-colors">
 							<Mail size={20} className="text-[#0058A3]" />
 							<div className="text-left">
 								<p className="text-xs text-slate-500 mb-0.5">Email</p>
@@ -268,7 +272,7 @@ export default function LandingPage() {
 						</a>
 						<a
 							href="tel:+5500000000000"
-							className="inline-flex items-center gap-3 bg-slate-900 border border-slate-700 hover:border-[#0058A3]/50 rounded-2xl px-8 py-5 transition-colors">
+							className="inline-flex items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-[#0058A3]/50 rounded-2xl px-8 py-5 transition-colors">
 							<Phone size={20} className="text-[#0058A3]" />
 							<div className="text-left">
 								<p className="text-xs text-slate-500 mb-0.5">Telefone</p>
@@ -280,17 +284,17 @@ export default function LandingPage() {
 			</section>
 
 			{/* Footer */}
-			<footer className="border-t border-slate-800 py-10 px-6">
+			<footer className="border-t border-slate-200 dark:border-slate-800 py-10 px-6">
 				<div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
 					<span className="text-xl font-bold text-[#0058A3]">Chofair</span>
 					<p className="text-sm text-slate-500">
 						© {new Date().getFullYear()} Chofair. Todos os direitos reservados.
 					</p>
 					<div className="flex gap-6 text-sm text-slate-500">
-						<a href="#" className="hover:text-white transition-colors">
+						<a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">
 							Privacidade
 						</a>
-						<a href="#" className="hover:text-white transition-colors">
+						<a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">
 							Termos
 						</a>
 					</div>

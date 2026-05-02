@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
 
   // Se já está logado e tenta acessar /login, redireciona pro dashboard
   if (user && pathname === '/login') {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/admin', request.url));
   }
 
   return supabaseResponse;

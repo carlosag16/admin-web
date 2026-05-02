@@ -65,17 +65,16 @@ export default async function MotoristasPage({
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <NavBar />
       <main className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-semibold text-zinc-800">Motoristas</h2>
-            <p className="text-sm text-zinc-500">{motoristas.length} motoristas</p>
+            <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200">Motoristas</h2>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">{motoristas.length} motoristas</p>
           </div>
         </div>
 
-        {/* Filters */}
         <div className="flex gap-2 mb-4 flex-wrap">
           {filters.map((f) => {
             const isActive = filter === f.key || (!filter && !f.key);
@@ -86,8 +85,8 @@ export default async function MotoristasPage({
                 href={href}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-zinc-900 text-white'
-                    : 'bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100'
+                    ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900'
+                    : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
                 }`}
               >
                 {f.label}
@@ -96,22 +95,22 @@ export default async function MotoristasPage({
           })}
         </div>
 
-        <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-100 bg-zinc-50">
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">Nome</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">CPF</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">CNH</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">Status</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">Cadastro</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">Ações</th>
+              <tr className="border-b border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800">
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">Nome</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">CPF</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">CNH</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">Status</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">Cadastro</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">Ações</th>
               </tr>
             </thead>
             <tbody>
               {motoristas.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-zinc-400">
+                  <td colSpan={6} className="px-4 py-10 text-center text-zinc-400 dark:text-zinc-500">
                     Nenhum motorista encontrado
                   </td>
                 </tr>
@@ -119,16 +118,16 @@ export default async function MotoristasPage({
                 motoristas.map((m) => (
                   <tr
                     key={m.id}
-                    className="border-b border-zinc-50 hover:bg-zinc-50 transition-colors"
+                    className="border-b border-zinc-50 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                   >
-                    <td className="px-4 py-3 font-medium text-zinc-900">{m.name ?? '—'}</td>
-                    <td className="px-4 py-3 text-zinc-600 font-mono text-xs">
+                    <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">{m.name ?? '—'}</td>
+                    <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400 font-mono text-xs">
                       {formatCPF(m.cpf)}
                     </td>
-                    <td className="px-4 py-3 text-zinc-600">
+                    <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
                       {m.cnh_numero ?? '—'}
                       {m.cnh_validade && (
-                        <span className="ml-1 text-xs text-zinc-400">
+                        <span className="ml-1 text-xs text-zinc-400 dark:text-zinc-500">
                           (val: {formatDate(m.cnh_validade)})
                         </span>
                       )}
@@ -142,11 +141,11 @@ export default async function MotoristasPage({
                         {statusLabels[m.status_motorista ?? 'pendente']}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-zinc-500">{formatDate(m.created_at)}</td>
+                    <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{formatDate(m.created_at)}</td>
                     <td className="px-4 py-3">
                       <Link
                         href={`/motoristas/${m.id}`}
-                        className="text-blue-600 hover:underline font-medium"
+                        className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                       >
                         Ver
                       </Link>

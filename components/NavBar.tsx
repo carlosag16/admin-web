@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Car, ClipboardList, CreditCard } from 'lucide-react';
+import { LayoutDashboard, Users, Car, ClipboardList, CreditCard, Sun, Moon } from 'lucide-react';
+import { useTheme } from '@/components/ThemeProvider';
 
 const links = [
   { href: '/admin', label: 'Dashboard', Icon: LayoutDashboard },
@@ -14,33 +15,43 @@ const links = [
 
 export default function NavBar() {
   const pathname = usePathname();
+  const { theme, toggle } = useTheme();
 
   return (
-    <header className="bg-white border-b border-zinc-200 px-6 py-4">
+    <header className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div>
-          <Link href="/admin" className="text-2xl font-bold text-zinc-900">Chofair Admin</Link>
-          <p className="text-sm text-zinc-500">Painel de controle</p>
+          <Link href="/admin" className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Chofair Admin</Link>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Painel de controle</p>
         </div>
-        <nav className="flex gap-1 text-sm font-medium">
-          {links.map(({ href, label, Icon }) => {
-            const isActive = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors ${
-                  isActive
-                    ? 'bg-zinc-100 text-zinc-900 font-semibold'
-                    : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'
-                }`}
-              >
-                <Icon size={15} />
-                {label}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="flex items-center gap-2">
+          <nav className="flex gap-1 text-sm font-medium">
+            {links.map(({ href, label, Icon }) => {
+              const isActive = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-zinc-100 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-semibold'
+                      : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800'
+                  }`}
+                >
+                  <Icon size={15} />
+                  {label}
+                </Link>
+              );
+            })}
+          </nav>
+          <button
+            onClick={toggle}
+            aria-label="Alternar tema"
+            className="ml-2 p-2 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+        </div>
       </div>
     </header>
   );

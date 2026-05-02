@@ -33,31 +33,31 @@ export default async function UsuariosPage() {
   const usuarios = await getUsuarios();
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <NavBar />
       <main className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-semibold text-zinc-800">Usuários</h2>
-            <p className="text-sm text-zinc-500">{usuarios.length} clientes cadastrados</p>
+            <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200">Usuários</h2>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">{usuarios.length} clientes cadastrados</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-100 bg-zinc-50">
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">Nome</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">CPF</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">Telefone</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">Cadastro</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-600">Ações</th>
+              <tr className="border-b border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800">
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">Nome</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">CPF</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">Telefone</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">Cadastro</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">Ações</th>
               </tr>
             </thead>
             <tbody>
               {usuarios.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-10 text-center text-zinc-400">
+                  <td colSpan={5} className="px-4 py-10 text-center text-zinc-400 dark:text-zinc-500">
                     Nenhum usuário encontrado
                   </td>
                 </tr>
@@ -65,16 +65,16 @@ export default async function UsuariosPage() {
                 usuarios.map((u) => (
                   <tr
                     key={u.id}
-                    className="border-b border-zinc-50 hover:bg-zinc-50 transition-colors"
+                    className="border-b border-zinc-50 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                   >
-                    <td className="px-4 py-3 font-medium text-zinc-900">{u.name ?? '—'}</td>
-                    <td className="px-4 py-3 text-zinc-600 font-mono text-xs">{formatCPF(u.cpf)}</td>
-                    <td className="px-4 py-3 text-zinc-600">{u.telefone ?? '—'}</td>
-                    <td className="px-4 py-3 text-zinc-500">{formatDate(u.created_at)}</td>
+                    <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">{u.name ?? '—'}</td>
+                    <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400 font-mono text-xs">{formatCPF(u.cpf)}</td>
+                    <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">{u.telefone ?? '—'}</td>
+                    <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{formatDate(u.created_at)}</td>
                     <td className="px-4 py-3">
                       <Link
                         href={`/usuarios/${u.id}`}
-                        className="text-blue-600 hover:underline font-medium"
+                        className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                       >
                         Ver
                       </Link>
