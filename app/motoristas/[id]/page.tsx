@@ -1,9 +1,9 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import NavBar from '@/components/NavBar';
 import Link from 'next/link';
 import { aprovarMotorista, rejeitarMotorista, suspenderMotorista, reativarMotorista } from './actions';
 
-function formatDate(dateStr?: string) {
+function formatDate(dateStr?: string | null) {
   if (!dateStr) return '—';
   return new Date(dateStr).toLocaleDateString('pt-BR');
 }
@@ -45,10 +45,15 @@ export default async function MotoristaDetailPage({
 }) {
   const { id } = await params;
   const { msg } = await searchParams;
+  const supabase = await createSupabaseServerClient();
 
-  const [{ data: profile }, { data: veiculos }, { data: documentos }, { data: corridas }] =
+  const [{ data: motorista }, { data: veiculos }, { data: documentos }, { data: corridas }] =
     await Promise.all([
-      supabase.from('profiles').select('*').eq('id', id).single(),
+      supabase
+        .from('driver_profiles')
+        .select('*, profiles(name, cpf, telefone, data_nascimento, foto_perfil_url, created_at)')
+        .eq('id', id)
+        .single(),
       supabase
         .from('veiculos')
         .select('*')
@@ -68,7 +73,7 @@ export default async function MotoristaDetailPage({
         .limit(10),
     ]);
 
-  if (!profile) {
+  if (!motorista) {
     return (
       <div className="min-h-screen bg-zinc-50">
         <NavBar />
@@ -82,7 +87,16 @@ export default async function MotoristaDetailPage({
     );
   }
 
-  const statusAtual = profile.status_motorista ?? 'pendente';
+  const profile = motorista.profiles as {
+    name: string | null;
+    cpf: string | null;
+    telefone: string | null;
+    data_nascimento: string | null;
+    foto_perfil_url: string | null;
+    created_at: string | null;
+  } | null;
+
+  const statusAtual = motorista.status_motorista ?? 'pendente';
   const totalGanhos = corridas?.reduce((acc, c) => acc + (c.preco_motorista ?? 0), 0) ?? 0;
 
   return (
@@ -95,7 +109,6 @@ export default async function MotoristaDetailPage({
           </Link>
         </div>
 
-        {/* Toast messages */}
         {msg === 'aprovado' && (
           <div className="mb-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm font-medium">
             Motorista aprovado com sucesso.
@@ -121,7 +134,7 @@ export default async function MotoristaDetailPage({
         <div className="bg-white rounded-xl border border-zinc-200 p-6 mb-6">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <h2 className="text-xl font-bold text-zinc-900">{profile.name ?? '—'}</h2>
+              <h2 className="text-xl font-bold text-zinc-900">{profile?.name ?? '—'}</h2>
               <span
                 className={`mt-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
                   statusColors[statusAtual]
@@ -130,24 +143,21 @@ export default async function MotoristaDetailPage({
                 {statusAtual.charAt(0).toUpperCase() + statusAtual.slice(1)}
               </span>
             </div>
-            {/* Action Buttons */}
             <div className="flex gap-2 flex-wrap justify-end">
               {statusAtual === 'pendente' && (
-                <>
-                  <form
-                    action={async () => {
-                      'use server';
-                      await aprovarMotorista(id);
-                    }}
+                <form
+                  action={async () => {
+                    'use server';
+                    await aprovarMotorista(id);
+                  }}
+                >
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition-colors"
                   >
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition-colors"
-                    >
-                      Aprovar
-                    </button>
-                  </form>
-                </>
+                    Aprovar
+                  </button>
+                </form>
               )}
               {(statusAtual === 'pendente' || statusAtual === 'aprovado') && (
                 <form action={rejeitarMotorista} className="flex gap-2 items-center">
@@ -200,45 +210,45 @@ export default async function MotoristaDetailPage({
             </div>
           </div>
 
-          {profile.motivo_rejeicao && (
+          {motorista.motivo_rejeicao && (
             <div className="mb-4 bg-red-50 border border-red-100 text-red-700 px-3 py-2 rounded-lg text-sm">
-              Motivo da rejeição: {profile.motivo_rejeicao}
+              Motivo da rejeição: {motorista.motivo_rejeicao}
             </div>
           )}
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
             <div>
               <p className="text-zinc-500 font-medium mb-0.5">CPF</p>
-              <p className="font-mono">{formatCPF(profile.cpf)}</p>
+              <p className="font-mono">{formatCPF(profile?.cpf)}</p>
             </div>
             <div>
               <p className="text-zinc-500 font-medium mb-0.5">Telefone</p>
-              <p>{profile.telefone ?? '—'}</p>
+              <p>{profile?.telefone ?? '—'}</p>
             </div>
             <div>
               <p className="text-zinc-500 font-medium mb-0.5">Nascimento</p>
-              <p>{formatDate(profile.data_nascimento)}</p>
+              <p>{formatDate(profile?.data_nascimento)}</p>
             </div>
             <div>
               <p className="text-zinc-500 font-medium mb-0.5">CNH Número</p>
-              <p>{profile.cnh_numero ?? '—'}</p>
+              <p>{motorista.cnh_numero ?? '—'}</p>
             </div>
             <div>
               <p className="text-zinc-500 font-medium mb-0.5">CNH Validade</p>
-              <p>{formatDate(profile.cnh_validade)}</p>
+              <p>{formatDate(motorista.cnh_validade)}</p>
             </div>
             <div>
               <p className="text-zinc-500 font-medium mb-0.5">CNH Categoria</p>
-              <p>{profile.cnh_categoria ?? '—'}</p>
+              <p>{motorista.cnh_categoria ?? '—'}</p>
             </div>
             <div>
               <p className="text-zinc-500 font-medium mb-0.5">Cadastro</p>
-              <p>{formatDate(profile.created_at)}</p>
+              <p>{formatDate(profile?.created_at)}</p>
             </div>
-            {profile.data_aprovacao && (
+            {motorista.data_aprovacao && (
               <div>
                 <p className="text-zinc-500 font-medium mb-0.5">Aprovado em</p>
-                <p>{formatDate(profile.data_aprovacao)}</p>
+                <p>{formatDate(motorista.data_aprovacao)}</p>
               </div>
             )}
             <div>

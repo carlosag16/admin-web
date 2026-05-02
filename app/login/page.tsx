@@ -30,11 +30,11 @@ function LoginForm() {
 
       const { data: profile } = await supabase
         .from('profiles')
-        .select('user_type')
+        .select('is_admin')
         .eq('id', data.user.id)
         .single();
 
-      if (profile?.user_type !== 'admin') {
+      if (!profile?.is_admin) {
         await supabase.auth.signOut();
         setErro('Você não tem permissão de acesso ao painel admin.');
         return;

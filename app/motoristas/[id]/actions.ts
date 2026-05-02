@@ -1,12 +1,12 @@
 'use server';
 
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function aprovarMotorista(motoristaId: string) {
-  const { error } = await supabase
-    .from('profiles')
+  const { error } = await supabaseAdmin
+    .from('driver_profiles')
     .update({
       status_motorista: 'aprovado',
       verificado: true,
@@ -32,8 +32,8 @@ export async function rejeitarMotorista(formData: FormData) {
     throw new Error('ID do motorista e motivo são obrigatórios');
   }
 
-  const { error } = await supabase
-    .from('profiles')
+  const { error } = await supabaseAdmin
+    .from('driver_profiles')
     .update({
       status_motorista: 'rejeitado',
       verificado: false,
@@ -51,8 +51,8 @@ export async function rejeitarMotorista(formData: FormData) {
 }
 
 export async function suspenderMotorista(motoristaId: string) {
-  const { error } = await supabase
-    .from('profiles')
+  const { error } = await supabaseAdmin
+    .from('driver_profiles')
     .update({
       status_motorista: 'suspenso',
       verificado: false,
@@ -69,8 +69,8 @@ export async function suspenderMotorista(motoristaId: string) {
 }
 
 export async function reativarMotorista(motoristaId: string) {
-  const { error } = await supabase
-    .from('profiles')
+  const { error } = await supabaseAdmin
+    .from('driver_profiles')
     .update({
       status_motorista: 'aprovado',
       verificado: true,

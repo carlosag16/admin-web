@@ -1,5 +1,4 @@
-export type UserType = 'user' | 'driver';
-export type StatusMotorista = 'pendente' | 'aprovado' | 'rejeitado' | 'suspenso';
+export type TermsRole = 'user' | 'driver';
 export type StatusSolicitacao =
   | 'pendente'
   | 'confirmada'
@@ -13,19 +12,29 @@ export interface Profile {
   id: string;
   name: string | null;
   cpf: string | null;
-  email?: string;
-  user_type: UserType;
-  telefone?: string;
-  foto_perfil_url?: string;
-  data_nascimento?: string;
-  cnh_numero?: string;
-  cnh_validade?: string;
-  cnh_categoria?: string;
-  cnh_foto_url?: string;
-  verificado: boolean;
-  status_motorista?: StatusMotorista;
-  data_aprovacao?: string;
-  motivo_rejeicao?: string;
+  phone: string | null;
+  birthdate: string | null;
+  plate: string | null;
+  model: string | null;
+  year: string | null;
+  color: string | null;
+  cep: string | null;
+  endereco: string | null;
+  numero: string | null;
+  estado: string | null;
+  cidade: string | null;
+  telefone: string | null;
+  foto_perfil_url: string | null;
+  data_nascimento: string | null;
+  push_token: string | null;
+  abacatepay_customer_id: string | null;
+  is_admin: boolean;
+  terms_role: TermsRole | null;
+  terms_version_accepted: number | null;
+  terms_accepted_at: string | null;
+  logradouro: string | null;
+  complemento: string | null;
+  bairro: string | null;
   created_at?: string;
 }
 

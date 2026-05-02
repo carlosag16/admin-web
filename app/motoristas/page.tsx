@@ -1,13 +1,25 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import NavBar from '@/components/NavBar';
 import Link from 'next/link';
-import type { Profile } from '@/lib/types';
+
+type MotoristaSummary = {
+  id: string;
+  status_motorista: string;
+  cnh_numero: string | null;
+  cnh_validade: string | null;
+  created_at: string;
+  profiles: {
+    name: string | null;
+    cpf: string | null;
+    telefone: string | null;
+  } | null;
+};
 
 async function getMotoristas(filter?: string) {
+  const supabase = await createSupabaseServerClient();
   let query = supabase
-    .from('profiles')
-    .select('id, name, cpf, user_type, verificado, status_motorista, created_at, telefone, cnh_numero, cnh_validade')
-    .eq('user_type', 'driver')
+    .from('driver_profiles')
+    .select('id, status_motorista, cnh_numero, cnh_validade, created_at, profiles(name, cpf, telefone)')
     .order('created_at', { ascending: false });
 
   if (filter && ['pendente', 'aprovado', 'rejeitado', 'suspenso'].includes(filter)) {
@@ -19,7 +31,7 @@ async function getMotoristas(filter?: string) {
     console.error('Erro ao buscar motoristas:', error);
     return [];
   }
-  return (data ?? []) as Profile[];
+  return (data ?? []) as unknown as MotoristaSummary[];
 }
 
 function formatDate(dateStr?: string) {
@@ -120,9 +132,11 @@ export default async function MotoristasPage({
                     key={m.id}
                     className="border-b border-zinc-50 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                   >
-                    <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">{m.name ?? '—'}</td>
+                    <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">
+                      {m.profiles?.name ?? '—'}
+                    </td>
                     <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400 font-mono text-xs">
-                      {formatCPF(m.cpf)}
+                      {formatCPF(m.profiles?.cpf)}
                     </td>
                     <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
                       {m.cnh_numero ?? '—'}
@@ -141,7 +155,9 @@ export default async function MotoristasPage({
                         {statusLabels[m.status_motorista ?? 'pendente']}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{formatDate(m.created_at)}</td>
+                    <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">
+                      {formatDate(m.created_at)}
+                    </td>
                     <td className="px-4 py-3">
                       <Link
                         href={`/motoristas/${m.id}`}

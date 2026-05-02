@@ -36,11 +36,11 @@ export async function middleware(request: NextRequest) {
   if (user && !publicRoutes.includes(pathname)) {
     const { data: profile } = await supabase
       .from('profiles')
-      .select('user_type')
+      .select('is_admin')
       .eq('id', user.id)
       .single();
 
-    if (profile?.user_type !== 'admin') {
+    if (!profile?.is_admin) {
       return NextResponse.redirect(new URL('/login?erro=acesso_negado', request.url));
     }
   }

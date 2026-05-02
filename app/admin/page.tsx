@@ -15,9 +15,9 @@ async function getDashboardStats() {
     { count: totalPagamentos },
     { count: paidPagamentos },
   ] = await Promise.all([
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('user_type', 'user'),
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('user_type', 'driver'),
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('user_type', 'driver').eq('status_motorista', 'pendente'),
+    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('terms_role', 'user'),
+    supabase.from('driver_profiles').select('*', { count: 'exact', head: true }),
+    supabase.from('driver_profiles').select('*', { count: 'exact', head: true }).eq('status_motorista', 'pendente'),
     supabase.from('solicitacoes').select('*', { count: 'exact', head: true }),
     supabase.from('solicitacoes').select('*', { count: 'exact', head: true }).eq('status', 'pendente'),
     supabase.from('solicitacoes').select('*', { count: 'exact', head: true }).in('status', ['confirmada', 'em_andamento']),
