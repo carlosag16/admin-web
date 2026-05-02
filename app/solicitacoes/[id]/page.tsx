@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import NavBar from '@/components/NavBar';
 import Link from 'next/link';
 
@@ -48,6 +48,7 @@ export default async function SolicitacaoDetailPage({
 }) {
   const { id } = await params;
 
+  const supabase = await createSupabaseServerClient();
   const [{ data: solicitacao }, { data: enderecos }, { data: pagamento }] = await Promise.all([
     supabase
       .from('solicitacoes')

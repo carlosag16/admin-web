@@ -1,23 +1,32 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import NavBar from '@/components/NavBar';
 import Link from 'next/link';
-import type { Profile } from '@/lib/types';
+
+type UsuarioRow = {
+  id: string;
+  name: string | null;
+  cpf: string | null;
+  terms_role: string | null;
+  telefone: string | null;
+  created_at: string | null;
+};
 
 async function getUsuarios() {
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('profiles')
-    .select('id, name, cpf, user_type, verificado, status_motorista, created_at, telefone')
-    .eq('user_type', 'user')
+    .select('id, name, cpf, terms_role, telefone, created_at')
+    .eq('terms_role', 'user')
     .order('created_at', { ascending: false });
 
   if (error) {
     console.error('Erro ao buscar usuários:', error);
     return [];
   }
-  return (data ?? []) as Profile[];
+  return (data ?? []) as UsuarioRow[];
 }
 
-function formatDate(dateStr?: string) {
+function formatDate(dateStr?: string | null) {
   if (!dateStr) return '—';
   return new Date(dateStr).toLocaleDateString('pt-BR');
 }

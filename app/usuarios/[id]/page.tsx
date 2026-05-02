@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import NavBar from '@/components/NavBar';
 import Link from 'next/link';
 
@@ -35,6 +35,7 @@ export default async function UsuarioDetailPage({
 }) {
   const { id } = await params;
 
+  const supabase = await createSupabaseServerClient();
   const [{ data: profile }, { data: solicitacoes }] = await Promise.all([
     supabase
       .from('profiles')
@@ -82,7 +83,7 @@ export default async function UsuarioDetailPage({
             </div>
             <div>
               <p className="text-zinc-500 font-medium mb-0.5">Tipo</p>
-              <p>{profile.user_type === 'user' ? 'Cliente' : 'Motorista'}</p>
+              <p>{profile.terms_role === 'user' ? 'Cliente' : 'Motorista'}</p>
             </div>
             <div>
               <p className="text-zinc-500 font-medium mb-0.5">Telefone</p>

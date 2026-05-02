@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import NavBar from '@/components/NavBar';
 import Link from 'next/link';
 
@@ -24,6 +24,7 @@ const statusColors: Record<string, string> = {
 const validStatuses = ['pendente', 'confirmada', 'em_andamento', 'finalizada', 'concluida', 'cancelada'];
 
 async function getSolicitacoes(filter?: string) {
+  const supabase = await createSupabaseServerClient();
   let query = supabase
     .from('solicitacoes')
     .select('id, tipo_solicitacao, data_servico, horario_inicio, horario_fim, duracao_horas, status, preco_total, created_at, usuario_id, motorista_id')

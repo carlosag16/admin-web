@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import NavBar from '@/components/NavBar';
 import Link from 'next/link';
 
@@ -23,6 +23,7 @@ const statusColors: Record<string, string> = {
 const validPaymentStatuses = ['PENDING', 'PAID', 'EXPIRED', 'CANCELLED', 'REFUNDED'];
 
 async function getPagamentos(filter?: string) {
+  const supabase = await createSupabaseServerClient();
   let query = supabase
     .from('pagamentos')
     .select(`
