@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Rotas públicas — acessíveis sem login
-  const publicRoutes = ['/', '/login'];
+  const publicRoutes = ['/', '/login', '/aplicativo'];
   if (!user && !publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL('/login', request.url));
   }

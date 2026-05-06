@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Car, ClipboardList, CreditCard, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, Users, Car, ClipboardList, CreditCard, Smartphone, Sun, Moon } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
 
 const links = [
@@ -11,6 +11,7 @@ const links = [
   { href: '/motoristas', label: 'Motoristas', Icon: Car },
   { href: '/solicitacoes', label: 'Solicitações', Icon: ClipboardList },
   { href: '/pagamentos', label: 'Pagamentos', Icon: CreditCard },
+  { href: '/aplicativo', label: 'Aplicativo', Icon: Smartphone },
 ];
 
 export default function NavBar() {
