@@ -26,14 +26,17 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   const pathname = request.nextUrl.pathname;
 
-  // Rotas públicas — acessíveis sem login
-  const publicRoutes = ['/', '/login', '/aplicativo'];
-  if (!user && !publicRoutes.includes(pathname)) {
+  // Rotas protegidas — tudo que começa com /admin, /motoristas, /usuarios, /solicitacoes, /pagamentos
+  const isProtected = ['/admin', '/motoristas', '/usuarios', '/solicitacoes', '/pagamentos'].some(
+    (route) => pathname === route || pathname.startsWith(route + '/')
+  );
+
+  if (!user && isProtected) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   // Se está logado em rota protegida, verifica se é admin
-  if (user && !publicRoutes.includes(pathname)) {
+  if (user && isProtected) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('is_admin')
@@ -45,7 +48,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Se já está logado e tenta acessar /login, redireciona pro dashboard
+  // Se já está logado e tenta acessar /login, redireciona pro painel
   if (user && pathname === '/login') {
     return NextResponse.redirect(new URL('/admin', request.url));
   }

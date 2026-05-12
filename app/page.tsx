@@ -265,12 +265,9 @@ export default function LandingPage() {
 						© {new Date().getFullYear()} Chofair. Todos os direitos reservados.
 					</p>
 					<div className="flex gap-6 text-sm text-slate-500">
-						<a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-							Privacidade
-						</a>
-						<a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-							Termos
-						</a>
+						<Link href="/termos" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+							Termos de Uso
+						</Link>
 					</div>
 				</div>
 			</footer>
